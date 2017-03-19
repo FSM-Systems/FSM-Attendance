@@ -2,17 +2,30 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.1
--- Dumped by pg_dump version 9.6.1
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-SET row_security = off;
+
+--
+-- Name: attendance; Type: DATABASE; Schema: -; Owner: root
+--
+
+CREATE DATABASE attendance WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
+
+
+ALTER DATABASE attendance OWNER TO root;
+
+\connect attendance
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
@@ -26,6 +39,62 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: plpython2u; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpython2u WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpython2u; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpython2u IS 'PL/Python2U untrusted procedural language';
+
+
+--
+-- Name: plpythonu; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpythonu WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpythonu; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpythonu IS 'PL/PythonU untrusted procedural language';
+
+
+--
+-- Name: pltcl; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS pltcl WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION pltcl; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION pltcl IS 'PL/Tcl procedural language';
+
+
+--
+-- Name: pltclu; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS pltclu WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION pltclu; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION pltclu IS 'PL/TclU untrusted procedural language';
 
 
 --
@@ -108,7 +177,24 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: employee_areas; Type: TABLE; Schema: public; Owner: postgres
+-- Name: emploee_attencance_bak; Type: TABLE; Schema: public; Owner: root; Tablespace: 
+--
+
+CREATE TABLE emploee_attencance_bak (
+    eaid integer,
+    eaemployee integer,
+    eadate timestamp without time zone,
+    ealatitude numeric(10,8),
+    ealongitude numeric(10,8),
+    eaaction character varying,
+    eacomment text
+);
+
+
+ALTER TABLE emploee_attencance_bak OWNER TO root;
+
+--
+-- Name: employee_areas; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE employee_areas (
@@ -142,7 +228,7 @@ ALTER SEQUENCE employee_areas_aid_seq OWNED BY employee_areas.aid;
 
 
 --
--- Name: employee_attendance; Type: TABLE; Schema: public; Owner: postgres
+-- Name: employee_attendance; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE employee_attendance (
@@ -180,7 +266,20 @@ ALTER SEQUENCE employee_attedance_eaid_seq OWNED BY employee_attendance.eaid;
 
 
 --
--- Name: employees; Type: TABLE; Schema: public; Owner: postgres
+-- Name: employee_bak; Type: TABLE; Schema: public; Owner: root; Tablespace: 
+--
+
+CREATE TABLE employee_bak (
+    eid integer,
+    euuid character varying,
+    ename character varying
+);
+
+
+ALTER TABLE employee_bak OWNER TO root;
+
+--
+-- Name: employees; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE employees (
@@ -214,77 +313,7 @@ ALTER SEQUENCE employees_eid_seq OWNED BY employees.eid;
 
 
 --
--- Name: equipment; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE equipment (
-    eqid integer NOT NULL,
-    eqdescription character varying
-);
-
-
-ALTER TABLE equipment OWNER TO postgres;
-
---
--- Name: equipment_eqid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE equipment_eqid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE equipment_eqid_seq OWNER TO postgres;
-
---
--- Name: equipment_eqid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE equipment_eqid_seq OWNED BY equipment.eqid;
-
-
---
--- Name: fuel; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE fuel (
-    fid integer NOT NULL,
-    fequipment integer,
-    fdate timestamp without time zone DEFAULT now(),
-    foperator integer,
-    fhours integer,
-    flitres integer
-);
-
-
-ALTER TABLE fuel OWNER TO postgres;
-
---
--- Name: fuel_fid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE fuel_fid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE fuel_fid_seq OWNER TO postgres;
-
---
--- Name: fuel_fid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE fuel_fid_seq OWNED BY fuel.fid;
-
-
---
--- Name: geofences; Type: TABLE; Schema: public; Owner: postgres
+-- Name: geofences; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE geofences (
@@ -322,49 +351,35 @@ ALTER SEQUENCE geofences_gid_seq OWNED BY geofences.gid;
 
 
 --
--- Name: employee_areas aid; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: aid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY employee_areas ALTER COLUMN aid SET DEFAULT nextval('employee_areas_aid_seq'::regclass);
 
 
 --
--- Name: employee_attendance eaid; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: eaid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY employee_attendance ALTER COLUMN eaid SET DEFAULT nextval('employee_attedance_eaid_seq'::regclass);
 
 
 --
--- Name: employees eid; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: eid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY employees ALTER COLUMN eid SET DEFAULT nextval('employees_eid_seq'::regclass);
 
 
 --
--- Name: equipment eqid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY equipment ALTER COLUMN eqid SET DEFAULT nextval('equipment_eqid_seq'::regclass);
-
-
---
--- Name: fuel fid; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY fuel ALTER COLUMN fid SET DEFAULT nextval('fuel_fid_seq'::regclass);
-
-
---
--- Name: geofences gid; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: gid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY geofences ALTER COLUMN gid SET DEFAULT nextval('geofences_gid_seq'::regclass);
 
 
 --
--- Name: employee_areas employee_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: employee_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY employee_areas
@@ -372,7 +387,7 @@ ALTER TABLE ONLY employee_areas
 
 
 --
--- Name: employee_attendance employee_attedance_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: employee_attedance_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY employee_attendance
@@ -380,7 +395,7 @@ ALTER TABLE ONLY employee_attendance
 
 
 --
--- Name: employees employees_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: employees_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY employees
@@ -388,23 +403,7 @@ ALTER TABLE ONLY employees
 
 
 --
--- Name: equipment equipment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY equipment
-    ADD CONSTRAINT equipment_pkey PRIMARY KEY (eqid);
-
-
---
--- Name: fuel fuel_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY fuel
-    ADD CONSTRAINT fuel_pkey PRIMARY KEY (fid);
-
-
---
--- Name: geofences geofences_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: geofences_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY geofences
@@ -412,7 +411,7 @@ ALTER TABLE ONLY geofences
 
 
 --
--- Name: employee_areas employee_areas_aarea_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: employee_areas_aarea_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY employee_areas
@@ -420,7 +419,7 @@ ALTER TABLE ONLY employee_areas
 
 
 --
--- Name: employee_areas employee_areas_aemp_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: employee_areas_aemp_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY employee_areas
@@ -428,7 +427,7 @@ ALTER TABLE ONLY employee_areas
 
 
 --
--- Name: employee_attendance employee_attedance_eaemployee_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: employee_attedance_eaemployee_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY employee_attendance
@@ -436,19 +435,13 @@ ALTER TABLE ONLY employee_attendance
 
 
 --
--- Name: fuel fuel_fequipment_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
 
-ALTER TABLE ONLY fuel
-    ADD CONSTRAINT fuel_fequipment_fkey FOREIGN KEY (fequipment) REFERENCES equipment(eqid);
-
-
---
--- Name: fuel fuel_foperator_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY fuel
-    ADD CONSTRAINT fuel_foperator_fkey FOREIGN KEY (foperator) REFERENCES employees(eid);
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
